@@ -6,6 +6,11 @@
   "scripts": {
     "start": "node index.js"
   },
+  "dependencies": {
+  "azure-functions": "^1.4.2",
+  "axios": "^0.24.0",
+  "lodash": "^4.17.21"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/da-yamaguchi/Azure-Functions.git"
