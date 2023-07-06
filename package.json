@@ -7,9 +7,9 @@
     "start": "node index.js"
   },
   "dependencies": {
-  "azure-functions": "^1.4.2",
-  "axios": "^0.24.0",
-  "lodash": "^4.17.21"
+    "express": "^4.17.1",
+    "axios": "^0.21.1",
+    "lodash": "^4.17.21"
   },
   "repository": {
     "type": "git",
