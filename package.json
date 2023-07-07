@@ -7,9 +7,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "axios": "^0.21.1",
-    "lodash": "^4.17.21"
+    "@slack/web-api": "^6.8.1",
+    "openai": "^3.3.0"
   },
   "repository": {
     "type": "git",
