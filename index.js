@@ -46,6 +46,11 @@ const postMessage = async (channel, text, threadTs, context) => {
  */
 const createCompletion = async (messages, context) => {
   try {
+    //context.log("createCompletion");
+    //context.log("messages");
+    //context.log(messages);
+    //context.log("context");
+    //context.log(context);
     const response = await openaiClient.createChatCompletion({
       messages: messages,
       max_tokens: 800,
@@ -63,6 +68,7 @@ const createCompletion = async (messages, context) => {
 
 module.exports = async function (context, req) {
   // Ignore retry requests
+  //context.log("module.exports");
   if (req.headers["x-slack-retry-num"]) {
     context.log("Ignoring Retry request: " + req.headers["x-slack-retry-num"]);
     context.log(req.body);
@@ -74,6 +80,7 @@ module.exports = async function (context, req) {
 
   // Response slack challenge requests
   const body = eval(req.body);
+  context.log("body.challenge");
   if (body.challenge) {
     context.log("Challenge: " + body.challenge);
     context.res = {
@@ -87,10 +94,22 @@ module.exports = async function (context, req) {
   const threadTs = event?.thread_ts ?? event?.ts;
   if (event?.type === "app_mention") {
     try {
+      //context.log("START");
+      //context.log(openaiClient);
+      // 追加項目
+      //context.log("event.channel");
+      //context.log(event.channel);
+      //context.log("threadTs");
+      //context.log(threadTs);
+      // 追加項目終了
       const threadMessagesResponse = await slackClient.conversations.replies({
         channel: event.channel,
         ts: threadTs,
       });
+      // 追加項目
+      //context.log("threadMessagesResponse");
+      //context.log(threadMessagesResponse);
+      // 追加項目終了
       if (threadMessagesResponse.ok !== true) {
         await postMessage(
           event.channel,
@@ -100,6 +119,7 @@ module.exports = async function (context, req) {
         );
         return;
       }
+      context.log("メッセージ取得成功");
       const botMessages = threadMessagesResponse.messages
         .sort((a, b) => Number(a.ts) - Number(b.ts))
         .filter(
@@ -121,9 +141,11 @@ module.exports = async function (context, req) {
           threadTs,
           context
         );
+        context.log("質問メッセージあり");
         return;
       }
-      context.log(botMessages);
+      //context.log("botMessages");
+      //context.log(botMessages);
       var postMessages = [
         {
           role: ChatCompletionRequestMessageRoleEnum.System,
@@ -132,6 +154,8 @@ module.exports = async function (context, req) {
         ...botMessages,
       ];
       const openaiResponse = await createCompletion(postMessages, context);
+      //context.log("openaiResponse");
+      //context.log(openaiResponse);
       if (openaiResponse == null || openaiResponse == "") {
         await postMessage(
           event.channel,
